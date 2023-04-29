@@ -13,7 +13,7 @@ final class CountryMenuBarViewModel: ObservableObject {
     @Published var statusText = Icon.global.rawValue
     @Published var model = Model.empty
 
-    private let urlPath = "http://ip-api.com/json"
+    private lazy var urlPath = "http://ip-api.com/json?fields=\(queryFields)"
     private var timer: Timer?
     private let defaultTime: TimeInterval = 120
     private var cancabledSet: Set<AnyCancellable> = []
@@ -44,6 +44,10 @@ final class CountryMenuBarViewModel: ObservableObject {
 }
 
 private extension CountryMenuBarViewModel {
+    var queryFields: String {
+        Model.CodingKeys.allCases.map { $0.rawValue }.joined(separator: ",")
+    }
+
     func startTimer() {
         let timer = Timer.scheduledTimer(withTimeInterval: defaultTime, repeats: true) { [weak self] timer in
             guard let self else {
@@ -77,7 +81,7 @@ extension CountryMenuBarViewModel {
 
         static let empty = Model(ip: "", country: "", countryCode: "", region: "", city: "")
 
-        enum CodingKeys: String, CodingKey {
+        enum CodingKeys: String, CodingKey, CaseIterable {
             case ip = "query"
             case country
             case countryCode
