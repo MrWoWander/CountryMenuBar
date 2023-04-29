@@ -10,7 +10,8 @@ import Combine
 
 final class CountryMenuBarViewModel: ObservableObject {
 
-    @Published var countryCode = Icon.global.rawValue
+    @Published var statusText = Icon.global.rawValue
+    @Published var model = Model.empty
 
     private let urlPath = "http://ip-api.com/json"
     private var timer: Timer?
@@ -27,16 +28,23 @@ final class CountryMenuBarViewModel: ObservableObject {
     }
 
     func refreshData() {
-        countryCode = String(format: "Loading: %@", Icon.loading.rawValue)
+        model = .empty
+        statusText = String(format: "Loading: %@", Icon.loading.rawValue)
         getCountry()
-            .assign(to: \.countryCode, on: self)
+            .sink(receiveValue: { [weak self] model in
+                self?.model = model
+                if model.countryCode.isEmpty {
+                    self?.statusText = String(format: "Error: %@", Icon.error.rawValue)
+                } else {
+                    self?.statusText = String(format: "%@: %@", model.countryCode, Icon.getUnicodeFlag(model.countryCode))
+                }
+            })
             .store(in: &cancabledSet)
     }
 }
 
 private extension CountryMenuBarViewModel {
     func startTimer() {
-        var count = 0
         let timer = Timer.scheduledTimer(withTimeInterval: defaultTime, repeats: true) { [weak self] timer in
             guard let self else {
                 timer.invalidate()
@@ -48,23 +56,38 @@ private extension CountryMenuBarViewModel {
         self.timer = timer
     }
 
-    func getCountry() -> AnyPublisher<String, Never> {
-        guard let url = URL(string: urlPath) else { return Just(String()).eraseToAnyPublisher() }
+    func getCountry() -> AnyPublisher<Model, Never> {
+        guard let url = URL(string: urlPath) else { return Just(Model.empty).eraseToAnyPublisher() }
         return URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
             .decode(type: Model.self, decoder: JSONDecoder())
-            .map { String(format: "%@: %@", $0.countryCode, Icon.getUnicodeFlag($0.countryCode)) }
-            .replaceError(with: String(format: "Error: %@", Icon.error.rawValue))
+            .replaceError(with: .empty)
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }
 }
 
-private extension CountryMenuBarViewModel {
-    struct Model: Decodable {
-        var countryCode: String
-    }
+extension CountryMenuBarViewModel {
+    struct Model: Decodable, Equatable {
+        let ip: String
+        let country: String
+        let countryCode: String
+        let region: String
+        let city: String
 
+        static let empty = Model(ip: "", country: "", countryCode: "", region: "", city: "")
+
+        enum CodingKeys: String, CodingKey {
+            case ip = "query"
+            case country
+            case countryCode
+            case region
+            case city
+        }
+    }
+}
+
+private extension CountryMenuBarViewModel {
     enum Icon: String {
         case global = "🌍"
         case loading = "🏳️"

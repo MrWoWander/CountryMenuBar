@@ -15,7 +15,7 @@ struct CountryMenuBarApp: App {
         MenuBarExtra {
             MenuButtonsView(viewModel: viewModel)
         } label: {
-            Text(viewModel.countryCode)
+            Text(viewModel.statusText)
         }
     }
 }

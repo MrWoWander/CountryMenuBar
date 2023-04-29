@@ -20,7 +20,7 @@
 		6D8B906429FDA6A500EA0C07 /* MenuButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtonsView.swift; sourceTree = "<group>"; };
 		6D8B906629FDA6A600EA0C07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6D8B906929FDA6A600EA0C07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		6D8B906B29FDA6A600EA0C07 /* VPNMenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VPNMenuBar.entitlements; sourceTree = "<group>"; };
+		6D8B906B29FDA6A600EA0C07 /* CountryMenuBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CountryMenuBar.entitlements; sourceTree = "<group>"; };
 		6D8B907129FDA88E00EA0C07 /* CountryMenuBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMenuBarViewModel.swift; sourceTree = "<group>"; };
 		6D8B907329FDAD9100EA0C07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,7 +61,7 @@
 				6D8B907329FDAD9100EA0C07 /* Info.plist */,
 				6D8B906429FDA6A500EA0C07 /* MenuButtonsView.swift */,
 				6D8B906829FDA6A600EA0C07 /* Preview Content */,
-				6D8B906B29FDA6A600EA0C07 /* VPNMenuBar.entitlements */,
+				6D8B906B29FDA6A600EA0C07 /* CountryMenuBar.entitlements */,
 			);
 			path = CountryMenuBar;
 			sourceTree = "<group>";
@@ -271,16 +271,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = VPNMenuBar/VPNMenuBar.entitlements;
+				CODE_SIGN_ENTITLEMENTS = CountryMenuBar/CountryMenuBar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"VPNMenuBar/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CountryMenuBar/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VPNMenuBar/Info.plist;
+				INFOPLIST_FILE = CountryMenuBar/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -301,16 +301,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = VPNMenuBar/VPNMenuBar.entitlements;
+				CODE_SIGN_ENTITLEMENTS = CountryMenuBar/CountryMenuBar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"VPNMenuBar/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CountryMenuBar/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = VPNMenuBar/Info.plist;
+				INFOPLIST_FILE = CountryMenuBar/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
