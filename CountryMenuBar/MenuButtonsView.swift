@@ -24,7 +24,7 @@ struct MenuButtonsView: View {
             }
         }
         Button("Update") {
-            viewModel.refreshData()
+            viewModel.refreshInfo()
         }
         Button("Close") {
             NSApp.terminate(nil)

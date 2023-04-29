@@ -10,7 +10,7 @@ import Combine
 
 final class CountryMenuBarViewModel: ObservableObject {
 
-    @Published var statusText = Icon.global.rawValue
+    @Published var statusText = Icon.loading.rawValue
     @Published var model = Model.empty
 
     private lazy var urlPath = "http://ip-api.com/json?fields=\(queryFields)"
@@ -19,12 +19,23 @@ final class CountryMenuBarViewModel: ObservableObject {
     private var cancabledSet: Set<AnyCancellable> = []
 
     init() {
+        refreshInfo()
+    }
+
+    func refreshInfo() {
+        timer?.invalidate()
         refreshData()
         startTimer()
     }
 
     deinit {
         timer?.invalidate()
+    }
+}
+
+private extension CountryMenuBarViewModel {
+    var queryFields: String {
+        Model.CodingKeys.allCases.map { $0.rawValue }.joined(separator: ",")
     }
 
     func refreshData() {
@@ -40,12 +51,6 @@ final class CountryMenuBarViewModel: ObservableObject {
                 }
             })
             .store(in: &cancabledSet)
-    }
-}
-
-private extension CountryMenuBarViewModel {
-    var queryFields: String {
-        Model.CodingKeys.allCases.map { $0.rawValue }.joined(separator: ",")
     }
 
     func startTimer() {
@@ -93,9 +98,8 @@ extension CountryMenuBarViewModel {
 
 private extension CountryMenuBarViewModel {
     enum Icon: String {
-        case global = "🌍"
         case loading = "🏳️"
-        case error = "⚠️"
+        case error = "🏴‍☠️"
     }
 }
 
