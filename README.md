@@ -5,8 +5,13 @@
 
 ## Примеры работы
 - Грузия
-    ![GE](Resources/GE.png)
+
+![GE](Resources/GE.png)
+
 - Греция
-    ![GR](Resources/GR.png)
+
+![GR](Resources/GR.png)
+
 - Аргентина
-    ![AR](Resources/AR.png)
+
+![AR](Resources/AR.png)
