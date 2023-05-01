@@ -6,25 +6,31 @@
 //
 
 import SwiftUI
-import Combine
 
 final class CountryMenuBarViewModel: ObservableObject {
 
-    @Published var statusText = Icon.loading.rawValue
-    @Published var model = Model.empty
+    @MainActor
+    @Published var statusText = State.loading.text
+    @MainActor
+    @Published var model: Model?
 
+    private let queryFields = Model.CodingKeys.allCases.map { $0.rawValue }.joined(separator: ",")
     private lazy var urlPath = "http://ip-api.com/json?fields=\(queryFields)"
     private var timer: Timer?
-    private let defaultTime: TimeInterval = 120
-    private var cancabledSet: Set<AnyCancellable> = []
 
     init() {
-        refreshInfo()
+        Task { [weak self] in
+            await self?.refreshInfo()
+        }
     }
 
-    func refreshInfo() {
+    func refreshInfo() async {
         timer?.invalidate()
-        refreshData()
+        await MainActor.run {
+            model = nil
+            statusText = State.loading.text
+        }
+        await refreshData()
         startTimer()
     }
 
@@ -34,45 +40,50 @@ final class CountryMenuBarViewModel: ObservableObject {
 }
 
 private extension CountryMenuBarViewModel {
-    var queryFields: String {
-        Model.CodingKeys.allCases.map { $0.rawValue }.joined(separator: ",")
-    }
-
-    func refreshData() {
-        model = .empty
-        statusText = String(format: "Loading: %@", Icon.loading.rawValue)
-        getCountry()
-            .sink(receiveValue: { [weak self] model in
-                self?.model = model
-                if model.countryCode.isEmpty {
-                    self?.statusText = String(format: "Error: %@", Icon.error.rawValue)
-                } else {
-                    self?.statusText = String(format: "%@: %@", model.countryCode, Icon.getUnicodeFlag(model.countryCode))
-                }
-            })
-            .store(in: &cancabledSet)
+    func refreshData() async {
+        guard let model = await getCountry() else {
+            await MainActor.run {
+                self.model = nil
+                statusText = State.error.text
+            }
+            return
+        }
+        await MainActor.run {
+            self.model = model
+            statusText = String(format: "%@: %@", model.countryCode, getUnicodeFlag(model.countryCode))
+        }
     }
 
     func startTimer() {
-        let timer = Timer.scheduledTimer(withTimeInterval: defaultTime, repeats: true) { [weak self] timer in
-            guard let self else {
-                timer.invalidate()
-                return
+        let timer = Timer.scheduledTimer(withTimeInterval: Constants.defaultTime, repeats: true) { [weak self] timer in
+            Task { [weak self] in
+                guard let self else {
+                    timer.invalidate()
+                    return
+                }
+                await self.refreshData()
             }
-            self.refreshData()
         }
         RunLoop.current.add(timer, forMode: .common)
         self.timer = timer
     }
 
-    func getCountry() -> AnyPublisher<Model, Never> {
-        guard let url = URL(string: urlPath) else { return Just(Model.empty).eraseToAnyPublisher() }
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { $0.data }
-            .decode(type: Model.self, decoder: JSONDecoder())
-            .replaceError(with: .empty)
-            .receive(on: RunLoop.main)
-            .eraseToAnyPublisher()
+    func getCountry() async -> Model? {
+        guard let url = URL(string: urlPath) else { return nil }
+        let urlRequest = URLRequest(url: url)
+        guard let data = try? await URLSession.shared.data(for: urlRequest).0,
+              let model = try? JSONDecoder().decode(Model.self, from: data)
+        else { return nil }
+        return model
+    }
+
+    func getUnicodeFlag(_ countryCode: String) -> String {
+        countryCode
+            .unicodeScalars
+            .map({ 127397 + $0.value })
+            .compactMap(UnicodeScalar.init)
+            .map(String.init)
+            .joined()
     }
 }
 
@@ -83,8 +94,6 @@ extension CountryMenuBarViewModel {
         let countryCode: String
         let region: String
         let city: String
-
-        static let empty = Model(ip: "", country: "", countryCode: "", region: "", city: "")
 
         enum CodingKeys: String, CodingKey, CaseIterable {
             case ip = "query"
@@ -97,19 +106,27 @@ extension CountryMenuBarViewModel {
 }
 
 private extension CountryMenuBarViewModel {
-    enum Icon: String {
+    enum State: String {
         case loading = "🏳️"
         case error = "🏴‍☠️"
     }
 }
 
-extension CountryMenuBarViewModel.Icon {
-    static func getUnicodeFlag(_ countryCode: String) -> String {
-        countryCode
-            .unicodeScalars
-            .map({ 127397 + $0.value })
-            .compactMap(UnicodeScalar.init)
-            .map(String.init)
-            .joined()
+private extension CountryMenuBarViewModel {
+    enum Constants {
+        static let defaultTime: TimeInterval = 120
     }
 }
+
+extension CountryMenuBarViewModel.State {
+    var text: String {
+        switch self {
+        case .loading:
+            return String(format: "Loading: %@", rawValue)
+        case .error:
+            return String(format: "Error: %@", rawValue)
+        }
+    }
+}
+
+extension Timer: @unchecked Sendable {}
