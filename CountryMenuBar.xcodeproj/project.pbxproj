@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D0663572A00B0A700B20A56 /* AsyncTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0663562A00B0A700B20A56 /* AsyncTimer.swift */; };
 		6D8B906329FDA6A500EA0C07 /* CountryMenuBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8B906229FDA6A500EA0C07 /* CountryMenuBarApp.swift */; };
 		6D8B906529FDA6A500EA0C07 /* MenuButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8B906429FDA6A500EA0C07 /* MenuButtonsView.swift */; };
 		6D8B906729FDA6A600EA0C07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D8B906629FDA6A600EA0C07 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6D0663562A00B0A700B20A56 /* AsyncTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTimer.swift; sourceTree = "<group>"; };
 		6D8B905F29FDA6A500EA0C07 /* CountryMenuBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CountryMenuBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D8B906229FDA6A500EA0C07 /* CountryMenuBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryMenuBarApp.swift; sourceTree = "<group>"; };
 		6D8B906429FDA6A500EA0C07 /* MenuButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtonsView.swift; sourceTree = "<group>"; };
@@ -56,12 +58,13 @@
 			isa = PBXGroup;
 			children = (
 				6D8B906629FDA6A600EA0C07 /* Assets.xcassets */,
+				6D0663562A00B0A700B20A56 /* AsyncTimer.swift */,
+				6D8B906B29FDA6A600EA0C07 /* CountryMenuBar.entitlements */,
 				6D8B906229FDA6A500EA0C07 /* CountryMenuBarApp.swift */,
 				6D8B907129FDA88E00EA0C07 /* CountryMenuBarViewModel.swift */,
 				6D8B907329FDAD9100EA0C07 /* Info.plist */,
 				6D8B906429FDA6A500EA0C07 /* MenuButtonsView.swift */,
 				6D8B906829FDA6A600EA0C07 /* Preview Content */,
-				6D8B906B29FDA6A600EA0C07 /* CountryMenuBar.entitlements */,
 			);
 			path = CountryMenuBar;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			files = (
 				6D8B907229FDA88E00EA0C07 /* CountryMenuBarViewModel.swift in Sources */,
 				6D8B906529FDA6A500EA0C07 /* MenuButtonsView.swift in Sources */,
+				6D0663572A00B0A700B20A56 /* AsyncTimer.swift in Sources */,
 				6D8B906329FDA6A500EA0C07 /* CountryMenuBarApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,7 +293,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.MikhailIvanov.CountryMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -320,7 +324,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.MikhailIvanov.CountryMenuBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

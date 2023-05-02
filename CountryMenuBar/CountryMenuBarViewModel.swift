@@ -16,7 +16,7 @@ final class CountryMenuBarViewModel: ObservableObject {
 
     private let queryFields = Model.CodingKeys.allCases.map { $0.rawValue }.joined(separator: ",")
     private lazy var urlPath = "http://ip-api.com/json?fields=\(queryFields)"
-    private var timer: Timer?
+    private var asyncTimer: AsyncTimer?
 
     init() {
         Task { [weak self] in
@@ -25,7 +25,7 @@ final class CountryMenuBarViewModel: ObservableObject {
     }
 
     func refreshInfo() async {
-        timer?.invalidate()
+        asyncTimer?.cancel()
         await MainActor.run {
             model = nil
             statusText = State.loading.text
@@ -35,7 +35,7 @@ final class CountryMenuBarViewModel: ObservableObject {
     }
 
     deinit {
-        timer?.invalidate()
+        asyncTimer?.cancel()
     }
 }
 
@@ -49,23 +49,21 @@ private extension CountryMenuBarViewModel {
             return
         }
         await MainActor.run {
+            guard self.model != model else { return }
             self.model = model
             statusText = String(format: "%@: %@", model.countryCode, getUnicodeFlag(model.countryCode))
         }
     }
 
     func startTimer() {
-        let timer = Timer.scheduledTimer(withTimeInterval: Constants.defaultTime, repeats: true) { [weak self] timer in
-            Task { [weak self] in
-                guard let self else {
-                    timer.invalidate()
-                    return
-                }
-                await self.refreshData()
+        let asyncTimer = AsyncTimer(withTimeInterval: .seconds(Constants.defaultTime), repeats: true) { [weak self] timer in
+            guard let self else {
+                timer.cancel()
+                return
             }
+            await self.refreshData()
         }
-        RunLoop.current.add(timer, forMode: .common)
-        self.timer = timer
+        self.asyncTimer = asyncTimer
     }
 
     func getCountry() async -> Model? {
@@ -128,5 +126,3 @@ extension CountryMenuBarViewModel.State {
         }
     }
 }
-
-extension Timer: @unchecked Sendable {}
